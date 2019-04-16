@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:built_collection/built_collection.dart';
@@ -362,7 +363,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
     } else if (path.isEmpty && baseUrl.isEmpty) {
       return literal('');
     } else {
-      if (path.length > 0 && !baseUrl.endsWith('/') && !path.startsWith('/')) {
+      if (!baseUrl.endsWith('/') && !path.startsWith('/')) {
         return literal('$baseUrl/$path');
       }
 
