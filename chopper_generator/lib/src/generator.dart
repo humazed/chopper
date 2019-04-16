@@ -193,7 +193,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
           );
 
           blocks.add(
-              Code('$_bodyVar.removeWhere((key, value) => value == null);'),
+            Code('$_bodyVar.removeWhere((key, value) => value == null);'),
           );
 
           blocks.add(
