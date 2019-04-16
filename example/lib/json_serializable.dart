@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:chopper/chopper.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+part 'json_serializable.g.dart';
 part 'json_serializable.chopper.dart';
 
 part 'json_serializable.g.dart';
