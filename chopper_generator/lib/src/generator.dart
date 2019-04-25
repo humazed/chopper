@@ -439,7 +439,6 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
         Code(
             "${p.displayName} == null ? null : PartValueFile<${p.type.displayName}>('$name', ${p.displayName})"),
       );
-    });
     return literalList(list);
   }
 
