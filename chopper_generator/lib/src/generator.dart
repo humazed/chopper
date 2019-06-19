@@ -3,7 +3,6 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:built_collection/built_collection.dart';
@@ -435,6 +434,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
         Code(
             "${p.displayName} == null ? null : PartValueFile<${p.type.displayName}>('$name', ${p.displayName})"),
       );
+    });
     return literalList(list);
   }
 
