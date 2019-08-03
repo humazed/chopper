@@ -41,9 +41,8 @@ class _$MyService extends MyService {
     return client.send<Resource, Resource>($request);
   }
 
-  Future<Response<Resource>> newResource(Resource resource,
-      {String name = null}) {
-    final $url = '/resources/';
+  Future<Response<Resource>> newResource(Resource resource, {String name}) {
+    final $url = '/resources';
     final $headers = {'name': name};
     final $body = resource;
     final $request =
@@ -61,7 +60,7 @@ class _$MyService extends MyService {
 
   Future<Response> postResources(Map a, Map b, String c) {
     final $url = '/resources/multi';
-    final List<PartValue> $parts = [
+    final $parts = <PartValue>[
       a == null ? null : PartValue<Map>('1', a),
       b == null ? null : PartValue<Map>('2', b),
       c == null ? null : PartValue<String>('3', c)
@@ -74,8 +73,8 @@ class _$MyService extends MyService {
 
   Future<Response> postFile(List<int> bytes) {
     final $url = '/resources/file';
-    final List<PartValue> $parts = [
-      bytes == null ? null : PartFile<List<int>>('file', bytes)
+    final $parts = <PartValue>[
+      bytes == null ? null : PartValueFile<List<int>>('file', bytes)
     ];
     $parts.removeWhere((val) => val == null);
     final $request =
@@ -84,15 +83,15 @@ class _$MyService extends MyService {
   }
 
   Future<Response> postMultiOptional(Map map, String str, List<int> bytes,
-      {Map opMap = null, String opStr = null, List<int> opBytes = null}) {
+      {Map opMap, String opStr, List<int> opBytes}) {
     final $url = '/resources/file';
-    final List<PartValue> $parts = [
+    final $parts = <PartValue>[
       map == null ? null : PartValue<Map>('map', map),
       str == null ? null : PartValue<String>('str', str),
       opMap == null ? null : PartValue<Map>('opMap', opMap),
       opStr == null ? null : PartValue<String>('opStr', opStr),
-      bytes == null ? null : PartFile<List<int>>('file', bytes),
-      opBytes == null ? null : PartFile<List<int>>('opBytes', opBytes)
+      bytes == null ? null : PartValueFile<List<int>>('file', bytes),
+      opBytes == null ? null : PartValueFile<List<int>>('opBytes', opBytes)
     ];
     $parts.removeWhere((val) => val == null);
     final $request =

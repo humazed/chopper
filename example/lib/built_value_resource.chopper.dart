@@ -33,9 +33,8 @@ class _$MyService extends MyService {
     return client.send<Resource, Resource>($request);
   }
 
-  Future<Response<Resource>> newResource(Resource resource,
-      {String name = null}) {
-    final $url = '/resources/';
+  Future<Response<Resource>> newResource(Resource resource, {String name}) {
+    final $url = '/resources';
     final $headers = {'name': name};
     final $body = resource;
     final $request =

@@ -69,7 +69,7 @@ abstract class MyService extends ChopperService {
   @Post(path: 'file')
   @multipart
   Future<Response> postFile(
-    @FileField('file') List<int> bytes,
+    @PartFile('file') List<int> bytes,
   );
 
   @Post(path: 'file')
@@ -77,9 +77,9 @@ abstract class MyService extends ChopperService {
   Future<Response> postMultiOptional(
     @Part('map') Map map,
     @Part('str') String str,
-    @FileField('file') List<int> bytes, {
+    @PartFile('file') List<int> bytes, {
     @Part('opMap') Map opMap,
     @Part('opStr') String opStr,
-    @FileField('opBytes') List<int> opBytes,
+    @PartFile('opBytes') List<int> opBytes,
   });
 }
