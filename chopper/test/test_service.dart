@@ -1,6 +1,7 @@
 import "dart:async";
 import 'dart:convert';
 import 'package:chopper/chopper.dart';
+import 'package:chopper/src/constants.dart';
 
 import 'package:http/http.dart' show MultipartFile;
 
@@ -17,8 +18,17 @@ abstract class HttpTestService extends ChopperService {
     @Header('test') String dynamicHeader,
   });
 
+  @Head(path: "head")
+  Future<Response> headTest();
+
   @Get(path: "get")
   Future<Response<Stream<List<int>>>> getStreamTest();
+
+  @Get(path: '')
+  Future<Response> getAll();
+
+  @Get(path: '/')
+  Future<Response> getAllWithTrailingSlash();
 
   @Get(path: "query")
   Future<Response> getQueryTest({
@@ -52,7 +62,18 @@ abstract class HttpTestService extends ChopperService {
   Future<Response> patchTest(@Path() String id, @Body() String data);
 
   @Post(path: 'map')
-  Future<Response> mapTest(@Body() Map map);
+  Future<Response> mapTest(@Body() Map<String, String> map);
+
+  @FactoryConverter(request: convertForm)
+  @Post(path: 'form/body')
+  Future<Response> postForm(@Body() Map<String, String> fields);
+
+  @Post(path: 'form/body', headers: {contentTypeKey: formEncodedHeaders})
+  Future<Response> postFormUsingHeaders(@Body() Map<String, String> fields);
+
+  @FactoryConverter(request: convertForm)
+  @Post(path: 'form/body/fields')
+  Future<Response> postFormFields(@Field() String foo, @Field() int bar);
 
   @Post(path: 'map/json')
   @FactoryConverter(
@@ -79,6 +100,10 @@ abstract class HttpTestService extends ChopperService {
     @Part() String id,
   });
 
+  @Post(path: 'files')
+  @multipart
+  Future<Response> postListFiles(@PartFile() List<MultipartFile> files);
+
   @Get(path: 'https://test.com')
   Future fullUrl();
 
@@ -93,3 +118,21 @@ Request customConvertRequest(Request req) {
 
 Response<T> customConvertResponse<T>(Response res) =>
     res.replace(body: json.decode(res.body));
+
+Request convertForm(Request req) {
+  req = applyHeader(req, contentTypeKey, formEncodedHeaders);
+
+  if (req.body is Map) {
+    final body = <String, String>{};
+
+    req.body.forEach((key, val) {
+      if (val != null) {
+        body[key.toString()] = val.toString();
+      }
+    });
+
+    req = req.replace(body: body);
+  }
+
+  return req;
+}

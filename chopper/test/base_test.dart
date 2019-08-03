@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
@@ -284,6 +285,28 @@ void main() {
       final response = await service.deleteTest('1234');
 
       expect(response.body, equals('delete response'));
+      expect(response.statusCode, equals(200));
+
+      httpClient.close();
+    });
+
+    test('Head', () async {
+      final httpClient = MockClient((request) async {
+        expect(
+          request.url.toString(),
+          equals('$baseUrl/test/head'),
+        );
+        expect(request.method, equals('HEAD'));
+
+        return http.Response('head response', 200);
+      });
+
+      final chopper = buildClient(httpClient);
+      final service = chopper.getService<HttpTestService>();
+
+      final response = await service.headTest();
+
+      expect(response.body, equals('head response'));
       expect(response.statusCode, equals(200));
 
       httpClient.close();
@@ -635,5 +658,57 @@ void main() {
 
     client.close();
     chopper.dispose();
+  });
+
+  test('Empty path gives no trailing slash', () async {
+    final httpClient = MockClient((request) async {
+      expect(
+        request.url.toString(),
+        equals('$baseUrl/test'),
+      );
+      expect(request.method, equals('GET'));
+
+      return http.Response('get response', 200);
+    });
+
+    final chopper = buildClient(httpClient);
+    final service = chopper.getService<HttpTestService>();
+
+    final _ = await service.getAll();
+  });
+
+  test('Slash in path gives a trailing slash', () async {
+    final httpClient = MockClient((request) async {
+      expect(
+        request.url.toString(),
+        equals('$baseUrl/test/'),
+      );
+      expect(request.method, equals('GET'));
+
+      return http.Response('get response', 200);
+    });
+
+    final chopper = buildClient(httpClient);
+    final service = chopper.getService<HttpTestService>();
+
+    final _ = await service.getAllWithTrailingSlash();
+  });
+
+  test('timeout', () async {
+    final httpClient = MockClient((http.Request req) async {
+      await Future.delayed(const Duration(minutes: 1));
+      return http.Response('ok', 200);
+    });
+
+    final chopper = buildClient(httpClient);
+    final service = chopper.getService<HttpTestService>();
+
+    try {
+      await service.getTest('1234').timeout(const Duration(seconds: 3));
+    } catch (e) {
+      expect(e is TimeoutException, isTrue);
+    }
+
+    httpClient.close();
   });
 }

@@ -3,13 +3,17 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
+
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:chopper/chopper.dart' as chopper;
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
+
 import 'package:source_gen/source_gen.dart';
+import 'package:code_builder/code_builder.dart';
+import 'package:chopper/chopper.dart' as chopper;
 
 const _clientVar = 'client';
 const _baseUrlVar = "baseUrl";
@@ -315,7 +319,8 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
     chopper.Delete,
     chopper.Put,
     chopper.Patch,
-    chopper.Method
+    chopper.Method,
+    chopper.Head,
   ];
 
   DartType _genericOf(DartType type) {
@@ -361,7 +366,10 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
     } else if (path.isEmpty && baseUrl.isEmpty) {
       return literal('');
     } else {
-      if (!baseUrl.endsWith('/') && !path.startsWith('/')) {
+      if (path.length > 0 &&
+          baseUrl.isNotEmpty &&
+          !baseUrl.endsWith('/') &&
+          !path.startsWith('/')) {
         return literal('$baseUrl/$path');
       }
 
@@ -435,7 +443,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
             "${p.displayName} == null ? null : PartValueFile<${p.type.displayName}>('$name', ${p.displayName})"),
       );
     });
-    return literalList(list);
+    return literalList(list, refer('PartValue'));
   }
 
   Code _generateHeaders(MethodElement m, ConstantReader method) {

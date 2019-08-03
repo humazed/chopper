@@ -190,7 +190,6 @@ class ChopperClient {
 
     if (!res.isSuccessful) {
       _responseErrorController.add(res);
-      throw res;
     }
     _responseController.add(res);
 
@@ -288,6 +287,22 @@ class ChopperClient {
       send<BodyType, InnerType>(
         Request(
           HttpMethod.Delete,
+          url,
+          baseUrl,
+          headers: headers,
+          parameters: parameters,
+        ),
+      );
+
+  /// Http Head request using [send] function
+  Future<Response<BodyType>> head<BodyType, InnerType>(
+    String url, {
+    Map<String, String> headers,
+    Map<String, dynamic> parameters,
+  }) =>
+      send<BodyType, InnerType>(
+        Request(
+          HttpMethod.Head,
           url,
           baseUrl,
           headers: headers,

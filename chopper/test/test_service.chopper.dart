@@ -21,10 +21,28 @@ class _$HttpTestService extends HttpTestService {
     return client.send<dynamic, dynamic>($request);
   }
 
+  Future<Response> headTest() {
+    final $url = '/test/head';
+    final $request = Request('HEAD', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
   Future<Response<Stream<List<int>>>> getStreamTest() {
     final $url = '/test/get';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<Stream<List<int>>, int>($request);
+  }
+
+  Future<Response> getAll() {
+    final $url = '/test';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  Future<Response> getAllWithTrailingSlash() {
+    final $url = '/test/';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
   }
 
   Future<Response> getQueryTest({String name, int number, int def = 42}) {
@@ -88,11 +106,36 @@ class _$HttpTestService extends HttpTestService {
     return client.send<dynamic, dynamic>($request);
   }
 
-  Future<Response> mapTest(Map map) {
+  Future<Response> mapTest(Map<String, String> map) {
     final $url = '/test/map';
     final $body = map;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
+  }
+
+  Future<Response> postForm(Map<String, String> fields) {
+    final $url = '/test/form/body';
+    final $body = fields;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request,
+        requestConverter: convertForm);
+  }
+
+  Future<Response> postFormUsingHeaders(Map<String, String> fields) {
+    final $url = '/test/form/body';
+    final $headers = {'content-type': 'application/x-www-form-urlencoded'};
+    final $body = fields;
+    final $request =
+        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  Future<Response> postFormFields(String foo, int bar) {
+    final $url = '/test/form/body/fields';
+    final $body = {'foo': foo, 'bar': bar};
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request,
+        requestConverter: convertForm);
   }
 
   Future<Response> forceJsonTest(Map map) {
@@ -106,7 +149,7 @@ class _$HttpTestService extends HttpTestService {
 
   Future<Response> postResources(Map a, Map b) {
     final $url = '/test/multi';
-    final $parts = [PartValue<Map>('1', a), PartValue<Map>('2', b)];
+    final $parts = <PartValue>[PartValue<Map>('1', a), PartValue<Map>('2', b)];
     final $request =
         Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
     return client.send<dynamic, dynamic>($request);
@@ -114,7 +157,7 @@ class _$HttpTestService extends HttpTestService {
 
   Future<Response> postFile(List<int> bytes) {
     final $url = '/test/file';
-    final $parts = [PartValueFile<List<int>>('file', bytes)];
+    final $parts = <PartValue>[PartValueFile<List<int>>('file', bytes)];
     final $request =
         Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
     return client.send<dynamic, dynamic>($request);
@@ -125,6 +168,16 @@ class _$HttpTestService extends HttpTestService {
     final $parts = <PartValue>[
       PartValue<String>('id', id),
       PartValueFile<MultipartFile>('file', file)
+    ];
+    final $request =
+        Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  Future<Response> postListFiles(List<MultipartFile> files) {
+    final $url = '/test/files';
+    final $parts = <PartValue>[
+      PartValueFile<List<MultipartFile>>('files', files)
     ];
     final $request =
         Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
