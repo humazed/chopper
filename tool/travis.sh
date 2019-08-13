@@ -17,29 +17,40 @@ pub upgrade || exit $?
 EXIT_CODE=0
 
 function pkg_coverage {
-  if [ "$CODECOV_TOKEN"] ; then
+  if [ "$CODECOV_TOKEN" ] ; then
     pub run test_coverage
     bash <(curl -s https://codecov.io/bash)
   fi
 }
 
+function run_analyze {
+  echo -e '\033[1mTASK: dartanalyzer\033[22m'
+  dartfmt -n --set-exit-if-changed .
+}
+
+function run_format {
+  echo -e '\033[1mTASK: format\033[22m'
+  dartfmt -n --set-exit-if-changed .
+}
+
+function run_test {
+  echo -e '\033[1mTASK: test\033[22m'
+  pub run build_runner build --delete-conflicting-outputs
+  pub run test -p chrome -p vm --reporter expanded 
+  pkg_coverage    
+}
+
 while (( "$#" )); do
   TASK=$1
   case $TASK in
-  command) echo
-    echo -e '\033[1mTASK: command\033[22m'
-    echo -e 'pub run build_runner test -- -p chrome -p vm'
-    pub run build_runner build --delete-conflicting-outputs || pub run test -p chrome -p vm --reporter expanded || pkg_coverage || EXIT_CODE=$?
+  test) echo
+    run_test
     ;;
   dartanalyzer) echo
-    echo -e '\033[1mTASK: dartanalyzer\033[22m'
-    echo -e 'dartanalyzer --fatal-infos --fatal-warnings .'
-    dartanalyzer --fatal-infos --fatal-warnings . || EXIT_CODE=$?
+    run_analyze
     ;;
   dartfmt) echo
-    echo -e '\033[1mTASK: dartfmt\033[22m'
-    echo -e 'dartfmt -n --set-exit-if-changed .'
-    dartfmt -n --set-exit-if-changed . || EXIT_CODE=$?
+    run_format
     ;;
   *) echo -e "\033[31mNot expecting TASK '${TASK}'. Error!\033[0m"
     EXIT_CODE=1

@@ -366,7 +366,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
     } else if (path.isEmpty && baseUrl.isEmpty) {
       return literal('');
     } else {
-      if (path.length > 0 &&
+      if (path.isNotEmpty &&
           baseUrl.isNotEmpty &&
           !baseUrl.endsWith('/') &&
           !path.startsWith('/')) {
@@ -379,10 +379,10 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
 
   Expression _generateRequest(
     ConstantReader method, {
-    bool hasBody: false,
-    bool hasParts: false,
-    bool useQueries: false,
-    bool useHeaders: false,
+    bool hasBody = false,
+    bool hasParts = false,
+    bool useQueries = false,
+    bool useHeaders = false,
   }) {
     final params = <Expression>[
       literal(method.peek("method").stringValue),
