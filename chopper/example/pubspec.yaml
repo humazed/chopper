@@ -1,4 +1,4 @@
-name: chopper2
+name: example
 description: Chopper is an http client generator using source_gen and inspired from retrofit
 version: 3.0.0
 homepage: https://github.com/lejard-h/chopper
@@ -20,8 +20,10 @@ dev_dependencies:
   test_coverage: ^0.3.0
   http_parser: ^3.1.3
   pedantic: ^1.0.0
-  chopper2_generator: 3.0.0
-#    path: ../chopper_generator
+  chopper2: ^3.0.0
+#    path: ../../chopper
+  chopper2_generator:  ^3.0.0
+#    path: ../../chopper_generator
 #  chopper2_generator:
 #            path: D:\AS\ASP\Prod\OpenSource\chopper\chopper2_generator
 #    git:

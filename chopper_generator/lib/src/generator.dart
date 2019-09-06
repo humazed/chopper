@@ -3,17 +3,13 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-
 import 'package:build/build.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:chopper/chopper.dart' as chopper;
+import 'package:chopper2/chopper.dart' as chopper2;
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
-
 import 'package:source_gen/source_gen.dart';
-import 'package:code_builder/code_builder.dart';
-import 'package:chopper/chopper.dart' as chopper;
 
 const _clientVar = 'client';
 const _baseUrlVar = "baseUrl";
@@ -24,7 +20,7 @@ const _bodyVar = '\$body';
 const _partsVar = '\$parts';
 const _urlVar = "\$url";
 
-class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
+class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
   @override
   FutureOr<String> generateForAnnotatedElement(
     Element element,
@@ -43,7 +39,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
   }
 
   bool _extendsChopperService(InterfaceType t) =>
-      _typeChecker(chopper.ChopperService).isExactlyType(t);
+      _typeChecker(chopper2.ChopperService).isExactlyType(t);
 
   Field _buildDefinitionTypeMethod(String superType) => Field(
         (m) => m
@@ -86,7 +82,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
   Constructor _generateConstructor() => Constructor((c) {
         c.optionalParameters.add(Parameter((p) {
           p.name = _clientVar;
-          p.type = refer('${chopper.ChopperClient}');
+          p.type = refer('${chopper2.ChopperClient}');
         }));
 
         c.body = Code(
@@ -104,16 +100,16 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
 
   Method _generateMethod(MethodElement m, String baseUrl) {
     final method = _getMethodAnnotation(m);
-    final multipart = _hasAnnotation(m, chopper.Multipart);
+    final multipart = _hasAnnotation(m, chopper2.Multipart);
     final factoryConverter = _getFactoryConverterAnotation(m);
 
-    final body = _getAnnotation(m, chopper.Body);
-    final paths = _getAnnotations(m, chopper.Path);
-    final queries = _getAnnotations(m, chopper.Query);
-    final queryMap = _getAnnotation(m, chopper.QueryMap);
-    final fields = _getAnnotations(m, chopper.Field);
-    final parts = _getAnnotations(m, chopper.Part);
-    final fileFields = _getAnnotations(m, chopper.PartFile);
+    final body = _getAnnotation(m, chopper2.Body);
+    final paths = _getAnnotations(m, chopper2.Path);
+    final queries = _getAnnotations(m, chopper2.Query);
+    final queryMap = _getAnnotation(m, chopper2.QueryMap);
+    final fields = _getAnnotations(m, chopper2.Field);
+    final parts = _getAnnotations(m, chopper2.Part);
+    final fileFields = _getAnnotations(m, chopper2.PartFile);
 
     final headers = _generateHeaders(m, method);
     final url = _generateUrl(method, paths, baseUrl);
@@ -300,7 +296,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
   }
 
   ConstantReader _getFactoryConverterAnotation(MethodElement method) {
-    final annot = _typeChecker(chopper.FactoryConverter)
+    final annot = _typeChecker(chopper2.FactoryConverter)
         .firstAnnotationOf(method, throwOnUnresolved: false);
     if (annot != null) return new ConstantReader(annot);
     return null;
@@ -314,13 +310,13 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
   }
 
   final _methodsAnnotations = const [
-    chopper.Get,
-    chopper.Post,
-    chopper.Delete,
-    chopper.Put,
-    chopper.Patch,
-    chopper.Method,
-    chopper.Head,
+    chopper2.Get,
+    chopper2.Post,
+    chopper2.Delete,
+    chopper2.Put,
+    chopper2.Patch,
+    chopper2.Method,
+    chopper2.Head,
   ];
 
   DartType _genericOf(DartType type) {
@@ -449,7 +445,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
   Code _generateHeaders(MethodElement m, ConstantReader method) {
     final map = {};
 
-    final annotations = _getAnnotations(m, chopper.Header);
+    final annotations = _getAnnotations(m, chopper2.Header);
 
     annotations.forEach((p, ConstantReader r) {
       final name = r.peek("name")?.stringValue ?? p.displayName;
@@ -472,6 +468,6 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper.ChopperApi> {
 
 Builder chopperGeneratorFactoryBuilder({String header}) => new PartBuilder(
       [new ChopperGenerator()],
-      ".chopper.dart",
+      ".chopper2.dart",
       header: header,
     );

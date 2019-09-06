@@ -1,5 +1,5 @@
 import "dart:async";
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper.dart';
 
 part "definition.chopper.dart";
 

@@ -15,7 +15,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^[latest version]
-  chopper_generator: ^[latest version]
+  chopper2_generator: ^[latest version]
 ```
 
 ### Define and Generate your API
@@ -24,7 +24,7 @@ dev_dependencies:
 // my_service.dart
 
 import "dart:async";
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper.dart';
 
 part "my_service.chopper.dart";
 
@@ -86,7 +86,7 @@ chopper.close();
 Or create a Chopper client and inject your generated api.
 
 ```dart
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper.dart';
 
 final chopper = new ChopperClient(
     baseUrl: "http://localhost:8000",

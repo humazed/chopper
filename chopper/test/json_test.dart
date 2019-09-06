@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:test/test.dart';
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper.dart';
 import 'test_service.dart';
 import 'package:http/testing.dart';
 import 'package:http/http.dart' as http;

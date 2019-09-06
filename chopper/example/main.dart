@@ -1,5 +1,5 @@
-import 'package:chopper/chopper.dart';
-import 'package:chopper/src/interceptor.dart';
+import 'package:chopper2/chopper.dart';
+import 'package:chopper2/src/interceptor.dart';
 import 'definition.dart';
 
 main() async {

@@ -4,6 +4,6 @@ builders:
     target: ":chopper_generator"
     import: "package:chopper_generator/chopper_generator.dart"
     builder_factories: ["chopperGeneratorFactory"]
-    build_extensions: {".dart": [".chopper.dart"]}
+    build_extensions: {".dart": [".chopper2.dart"]}
     auto_apply: root_package
     build_to: source

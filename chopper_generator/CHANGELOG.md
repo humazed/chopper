@@ -2,7 +2,7 @@
 
 ## 3.0.0
 
-- Maintenance release to support last version of `chopper` package (3.0.0) that introduced a breaking change on error handling
+- Maintenance release to support last version of `chopper2` package (3.0.0) that introduced a breaking change on error handling
 
 ## 2.5.0
 
@@ -26,7 +26,7 @@
 ## 2.4.0
 
 - Deprecate `@FileField`, use `@PartFile` instead
-- support `chopper: ^2.4.1`
+- support `chopper2: ^2.4.1`
 
 ## 2.3.4
 
@@ -54,11 +54,11 @@
     FutureOr<Response> convertError<ResultType, ItemType>(Response response);
   }
   ```
-- Remove deprecated `Chopper.service<Type>(Type)`
+- Remove deprecated `chopper2.service<Type>(Type)`
 - Add `QueryMap` annotation
-- Fix https://github.com/lejard-h/chopper/issues/28
-- Fix https://github.com/lejard-h/chopper/issues/21
-- Fix https://github.com/lejard-h/chopper/issues/37
+- Fix https://github.com/lejard-h/chopper2/issues/28
+- Fix https://github.com/lejard-h/chopper2/issues/21
+- Fix https://github.com/lejard-h/chopper2/issues/37
 
 ## 2.2.0
 
@@ -67,7 +67,7 @@
   on `Converter.convertResponse<ResultType>(response)`, 
   it take a new generic type => `Converter.convertResponse<ResultType, ItemType>(response)`
                  
-- deprecated `Chopper.service<Type>(Type)`, use `Chopper.getservice<Type>()` instead
+- deprecated `chopper2.service<Type>(Type)`, use `chopper2.getservice<Type>()` instead
 thanks to @MichaelDark
 
 ## 2.1.0
@@ -122,7 +122,7 @@ thanks to @MichaelDark
 
 ## 0.0.2
 
-- the generated extension is now `*.chopper.dart`
+- the generated extension is now `*.chopper2.dart`
 
 - rename `ServiceDefinition` to `ChopperApi`
 - rename `ChopperClient.services` field to `ChopperClient.apis`
