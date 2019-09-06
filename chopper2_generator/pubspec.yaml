@@ -1,6 +1,6 @@
 name: chopper2_generator
 description: chopper2 is an http client generator using source_gen and inspired from retrofit
-version: 3.0.1
+version: 3.0.2
 homepage: https://github.com/lejard-h/chopper2
 author: Hadrien Lejard <hadrien.lejard@gmail.com>
 
@@ -16,7 +16,7 @@ dependencies:
   code_builder: ^3.0.0
   dart_style: ^1.0.10
   built_collection: ^4.0.0
-  chopper2: ^3.0.0
+  chopper2: ^3.0.2
 #    path: ../chopper
 #  chopper2:
 #            path: D:\AS\ASP\Prod\OpenSource\chopper2\chopper2

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.2
+* Maintenance release to match the version with generator 
+
 ## 3.0.1
 * change the name to chopper2 
 
