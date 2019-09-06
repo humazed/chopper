@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.4
+* Maintenance release to match the version with generator 
+
 ## 3.0.3
 * Fix a bug in generator not running 
 

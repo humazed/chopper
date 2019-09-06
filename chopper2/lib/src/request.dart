@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
-import 'utils.dart';
+import 'package:meta/meta.dart';
+
 import 'constants.dart';
+import 'utils.dart';
 
 @immutable
 class Request {
@@ -187,13 +188,12 @@ Future<http.MultipartRequest> toMultipartRequest(
           ' - MultipartFile (from package:http)',
         );
       }
-    } else if(part.value is Iterable){
+    } else if (part.value is Iterable) {
       baseRequest.fields.addAll({
         for (var i = 0; i < part.value.length; i++)
-          '${part.name}${' ' * i}': part.value[i].id.toString()
+          '${part.name}${' ' * i}': part.value[i].toString()
       });
-    }
-    else {
+    } else {
       baseRequest.fields[part.name] = part.value.toString();
     }
   }
