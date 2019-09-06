@@ -1,4 +1,4 @@
-library chopper_generator.dart;
+library chopper2_generator.dart;
 
 import 'package:build/build.dart';
 import 'src/generator.dart';

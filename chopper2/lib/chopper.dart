@@ -1,4 +1,4 @@
-library chopper;
+library chopper2;
 
 export 'src/annotations.dart';
 export 'src/base.dart';

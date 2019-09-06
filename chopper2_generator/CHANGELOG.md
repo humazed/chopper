@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1
+
+- to change the name to chopper2_generator
+
 ## 3.0.0
 
 - Maintenance release to support last version of `chopper2` package (3.0.0) that introduced a breaking change on error handling

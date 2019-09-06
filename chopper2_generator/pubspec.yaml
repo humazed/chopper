@@ -1,6 +1,6 @@
 name: chopper2_generator
 description: chopper2 is an http client generator using source_gen and inspired from retrofit
-version: 3.0.0
+version: 3.0.1
 homepage: https://github.com/lejard-h/chopper2
 author: Hadrien Lejard <hadrien.lejard@gmail.com>
 
