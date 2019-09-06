@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:http/testing.dart';
 import 'package:http/http.dart' as http;
 import 'package:test/test.dart';
-import 'package:chopper2/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 import 'test_service.dart';
 
 void main() {

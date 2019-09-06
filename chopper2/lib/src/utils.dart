@@ -1,4 +1,4 @@
-import 'package:chopper2/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 import 'package:logging/logging.dart';
 
 /// see [applyHeaders]

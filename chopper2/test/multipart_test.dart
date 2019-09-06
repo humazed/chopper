@@ -1,4 +1,4 @@
-import 'package:chopper2/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:test/test.dart';
 import 'package:http/testing.dart';

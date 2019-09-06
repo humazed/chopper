@@ -1,6 +1,6 @@
 import "dart:async";
 import 'dart:convert';
-import 'package:chopper2/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 import 'package:chopper2/src/constants.dart';
 
 import 'package:http/http.dart' show MultipartFile;

@@ -24,9 +24,9 @@ dev_dependencies:
 // my_service.dart
 
 import "dart:async";
-import 'package:chopper2/chopper.dart';
+import 'chopper2.dart';
 
-part "my_service.chopper.dart";
+part "chopper2.dart";
 
 @ChopperApi(baseUrl: "/resources")
 abstract class MyService extends ChopperService {
@@ -86,7 +86,7 @@ chopper.close();
 Or create a Chopper client and inject your generated api.
 
 ```dart
-import 'package:chopper2/chopper.dart';
+import 'chopper2.dart';
 
 final chopper = new ChopperClient(
     baseUrl: "http://localhost:8000",

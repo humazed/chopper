@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.1
+* change the name to chopper2 
+
 ## 3.0.0
 
 **Breaking change**
