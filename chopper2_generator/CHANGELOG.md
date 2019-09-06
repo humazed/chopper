@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.3
+* Fix a bug in generator not running 
+
 ## 3.0.2
 
 * Maintenance release to match the version with chopper2 

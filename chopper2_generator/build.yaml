@@ -1,8 +1,8 @@
 # Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
 builders:
-  chopper_generator:
-    target: ":chopper_generator"
-    import: "package:chopper_generator/chopper2_generator.dart"
+  chopper2_generator:
+    target: ":chopper2_generator"
+    import: "package:chopper2_generator/chopper2_generator.dart"
     builder_factories: ["chopperGeneratorFactory"]
     build_extensions: {".dart": [".chopper2.dart"]}
     auto_apply: root_package
