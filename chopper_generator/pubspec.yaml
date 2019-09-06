@@ -16,8 +16,14 @@ dependencies:
   code_builder: ^3.0.0
   dart_style: ^1.0.10
   built_collection: ^4.0.0
+#  chopper:
+#    path: ../chopper
   chopper:
-    path: ../chopper
+    #        path: D:\AS\ASP\Prod\OpenSource\chopper\chopper
+    git:
+      url: git://github.com/humazed/chopper.git
+      path: chopper
+
 
 dev_dependencies:
   test: ^1.3.0
