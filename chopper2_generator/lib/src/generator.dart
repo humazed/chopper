@@ -29,7 +29,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
   ) {
     if (element is! ClassElement) {
       final friendlyName = element.displayName;
-      throw new InvalidGenerationSourceError(
+      throw InvalidGenerationSourceError(
         'Generator cannot target `$friendlyName`.',
         todo: 'Remove the [ChopperApi] annotation from `$friendlyName`.',
       );
@@ -54,7 +54,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
   ) {
     if (element.allSupertypes.any(_extendsChopperService) == false) {
       final friendlyName = element.displayName;
-      throw new InvalidGenerationSourceError(
+      throw InvalidGenerationSourceError(
         'Generator cannot target `$friendlyName`.',
         todo: '`$friendlyName` need to extends the [ChopperService] class.',
       );
@@ -64,7 +64,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
     final name = '_\$${friendlyName}';
     final baseUrl = annotation?.peek(_baseUrlVar)?.stringValue ?? '';
 
-    final classBuilder = new Class((c) {
+    final classBuilder = Class((c) {
       c
         ..name = name
         ..constructors.addAll([
@@ -75,8 +75,8 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
         ..extend = refer(friendlyName);
     });
 
-    final emitter = new DartEmitter();
-    return new DartFormatter().format('${classBuilder.accept(emitter)}');
+    final emitter = DartEmitter();
+    return DartFormatter().format('${classBuilder.accept(emitter)}');
   }
 
   Constructor _generateConstructor() => Constructor((c) {
@@ -117,21 +117,21 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
     final responseInnerType =
         _getResponseInnerType(m.returnType) ?? responseType;
 
-    return new Method((b) {
+    return Method((b) {
       b.name = m.displayName;
-      b.returns = new Reference(m.returnType.displayName);
+      b.returns = Reference(m.returnType.displayName);
       b.requiredParameters.addAll(m.parameters
           .where((p) => p.isNotOptional)
-          .map((p) => new Parameter((pb) => pb
+          .map((p) => Parameter((pb) => pb
             ..name = p.name
-            ..type = new Reference(p.type.displayName))));
+            ..type = Reference(p.type.displayName))));
 
       b.optionalParameters.addAll(m.parameters
           .where((p) => p.isOptionalPositional)
-          .map((p) => new Parameter((pb) {
+          .map((p) => Parameter((pb) {
                 pb
                   ..name = p.name
-                  ..type = new Reference(p.type.displayName);
+                  ..type = Reference(p.type.displayName);
 
                 if (p.defaultValueCode != null) {
                   pb.defaultTo = Code(p.defaultValueCode);
@@ -140,11 +140,11 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
               })));
 
       b.optionalParameters.addAll(
-          m.parameters.where((p) => p.isNamed).map((p) => new Parameter((pb) {
+          m.parameters.where((p) => p.isNamed).map((p) => Parameter((pb) {
                 pb
                   ..named = true
                   ..name = p.name
-                  ..type = new Reference(p.type.displayName);
+                  ..type = Reference(p.type.displayName);
 
                 if (p.defaultValueCode != null) {
                   pb.defaultTo = Code(p.defaultValueCode);
@@ -245,7 +245,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
           .returned
           .statement);
 
-      b.body = new Block.of(blocks);
+      b.body = Block.of(blocks);
     });
   }
 
@@ -262,14 +262,14 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
     for (final p in m.parameters) {
       final a = _typeChecker(type).firstAnnotationOf(p);
       if (annot != null && a != null) {
-        throw new Exception("Too many $type annotation for '${m.displayName}");
+        throw Exception("Too many $type annotation for '${m.displayName}");
       } else if (annot == null && a != null) {
         annot = a;
         name = p.displayName;
       }
     }
     if (annot == null) return {};
-    return {name: new ConstantReader(annot)};
+    return {name: ConstantReader(annot)};
   }
 
   Map<ParameterElement, ConstantReader> _getAnnotations(
@@ -278,19 +278,19 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
     for (final p in m.parameters) {
       final a = _typeChecker(type).firstAnnotationOf(p);
       if (a != null) {
-        annot[p] = new ConstantReader(a);
+        annot[p] = ConstantReader(a);
       }
     }
     return annot;
   }
 
-  TypeChecker _typeChecker(Type type) => new TypeChecker.fromRuntime(type);
+  TypeChecker _typeChecker(Type type) => TypeChecker.fromRuntime(type);
 
   ConstantReader _getMethodAnnotation(MethodElement method) {
     for (final type in _methodsAnnotations) {
       final annot = _typeChecker(type)
           .firstAnnotationOf(method, throwOnUnresolved: false);
-      if (annot != null) return new ConstantReader(annot);
+      if (annot != null) return ConstantReader(annot);
     }
     return null;
   }
@@ -298,7 +298,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
   ConstantReader _getFactoryConverterAnotation(MethodElement method) {
     final annot = _typeChecker(chopper2.FactoryConverter)
         .firstAnnotationOf(method, throwOnUnresolved: false);
-    if (annot != null) return new ConstantReader(annot);
+    if (annot != null) return ConstantReader(annot);
     return null;
   }
 
@@ -466,8 +466,8 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
   }
 }
 
-Builder chopperGeneratorFactoryBuilder({String header}) => new PartBuilder(
-      [new ChopperGenerator()],
+Builder chopperGeneratorFactoryBuilder({String header}) => PartBuilder(
+      [ChopperGenerator()],
       ".chopper2.dart",
       header: header,
     );
