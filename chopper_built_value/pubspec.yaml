@@ -1,0 +1,28 @@
+name: chopper_built_value
+description: Chopper is an http client generator using source_gen and inspired from retrofit
+version: 0.0.6
+homepage: https://hadrien-lejard.gitbook.io/chopper
+repository: https://github.com/lejard-h/chopper
+author: Hadrien Lejard <hadrien.lejard@gmail.com>
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  built_value: ^7.1.0
+  built_collection: ^4.3.2
+  chopper: ^3.0.6
+  http: ^0.12.2
+
+dev_dependencies:
+  test: ^1.15.4
+  build_runner: ^1.10.3
+  build_test:
+  coverage: ^0.14.1
+  built_value_generator: ^7.1.0
+  pedantic: ^1.9.2
+
+dependency_overrides:
+  analyzer: 0.40.4
+  chopper2:
+    path: ../chopper2

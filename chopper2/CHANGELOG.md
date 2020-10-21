@@ -1,13 +1,28 @@
 # Changelog
 
 ## 3.0.4
-* Fix a bug with multipart list 
+* Fix a bug with multipart list
+
+## 3.0.3
+* Fix a bug with multipart list
+
+- Packages upgrade
 
 ## 3.0.2
-* Maintenance release to match the version with generator 
+
+* Maintenance release to match the version with generator
+- Update analyzer
+- On `Response` and `Request`, deprecate `replace` method, use `copyWith` instead
+
+## 3.0.1+1
+
+- Documentations update
 
 ## 3.0.1
-* change the name to chopper2 
+
+* change the name to chopper2
+- ResponseInterceptor function support typed parameter
+- Fix JsonConverter when converting core types
 
 ## 3.0.0
 

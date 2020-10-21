@@ -1,23 +1,23 @@
-import "dart:async";
-import 'package:chopper2/chopper.dart';
+import 'dart:async';
+import 'package:chopper2/chopper2.dart';
 
-part "definition.chopper.dart";
+part 'definition.chopper.dart';
 
-@ChopperApi(baseUrl: "/resources")
+@ChopperApi(baseUrl: '/resources')
 abstract class MyService extends ChopperService {
   static MyService create([ChopperClient client]) => _$MyService(client);
 
-  @Get(path: "/{id}")
+  @Get(path: '/{id}')
   Future<Response> getResource(
     @Path() String id,
   );
 
-  @Get(path: "/", headers: const {"foo": "bar"})
+  @Get(path: '/', headers: {'foo': 'bar'})
   Future<Response<Map>> getMapResource(
     @Query() String id,
   );
 
-  @Get(path: "/resources")
+  @Get(path: '/resources')
   Future<Response<List<Map>>> getListResources();
 
   @Post(path: '/')

@@ -105,7 +105,7 @@ void main() {
     chopper.dispose();
   });
 
-  test("MultipartFile with other Part", () async {
+  test('MultipartFile with other Part', () async {
     final httpClient = MockClient((http.Request req) async {
       expect(req.headers['Content-Type'], contains('multipart/form-data;'));
 
@@ -194,8 +194,8 @@ void main() {
   test('PartValue', () async {
     final req = await toMultipartRequest(
       [
-        PartValue<String>("foo", "bar"),
-        PartValue<int>("int", 42),
+        PartValue<String>('foo', 'bar'),
+        PartValue<int>('int', 42),
       ],
       HttpMethod.Post,
       Uri.parse('/foo'),
@@ -209,8 +209,8 @@ void main() {
   test('PartFile', () async {
     final req = await toMultipartRequest(
       [
-        PartValueFile<String>("foo", "test/multipart_test.dart"),
-        PartValueFile<List<int>>("int", [1, 2]),
+        PartValueFile<String>('foo', 'test/multipart_test.dart'),
+        PartValueFile<List<int>>('int', [1, 2]),
       ],
       HttpMethod.Post,
       Uri.parse('/foo'),
@@ -225,27 +225,27 @@ void main() {
   }, testOn: 'vm');
 
   test('PartValue.replace', () {
-    dynamic part = PartValue<String>("foo", "bar");
+    dynamic part = PartValue<String>('foo', 'bar');
 
-    expect(part.name, equals("foo"));
-    expect(part.value, equals("bar"));
+    expect(part.name, equals('foo'));
+    expect(part.value, equals('bar'));
 
-    part = part.replace<int>(value: 42);
+    part = part.copyWith<int>(value: 42);
 
-    expect(part.name, equals("foo"));
+    expect(part.name, equals('foo'));
     expect(part.value, equals(42));
 
-    part = part.replace<int>(name: "int");
+    part = part.copyWith<int>(name: 'int');
 
-    expect(part.name, equals("int"));
+    expect(part.name, equals('int'));
     expect(part.value, equals(42));
   });
 
   test('Multipart request non nullable', () async {
     final req = await toMultipartRequest(
       [
-        PartValue<int>("int", 42),
-        PartValueFile<List<int>>("list int", [1, 2]),
+        PartValue<int>('int', 42),
+        PartValueFile<List<int>>('list int', [1, 2]),
         null,
         PartValue('null value', null),
         PartValueFile('null file', null),
@@ -268,7 +268,7 @@ void main() {
         PartValue<http.MultipartFile>(
           null,
           http.MultipartFile.fromBytes(
-            "first",
+            'first',
             [1, 2],
             filename: 'list int 1',
           ),
@@ -276,7 +276,7 @@ void main() {
         PartValueFile<http.MultipartFile>(
           null,
           http.MultipartFile.fromBytes(
-            "second",
+            'second',
             [2, 1],
             filename: 'list int 2',
           ),

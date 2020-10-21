@@ -1,7 +1,12 @@
 import 'package:chopper2/chopper2.dart';
 import 'package:logging/logging.dart';
 
-/// see [applyHeaders]
+/// Apply [value] to the header field [name] of the [request]
+/// if [override] is true, it will erase already present headers with the new value
+///
+/// ```dart
+/// final newRequest = applyHeader(request, 'foo', 'bar');
+/// ```
 Request applyHeader(
   Request request,
   String name,
@@ -14,8 +19,12 @@ Request applyHeader(
       override: override,
     );
 
-/// apply given [headers] to the [request]
+/// Apply given [headers] to the [request]
 /// if [override] is true, it will erase already present headers with the new value
+///
+/// ```dart
+/// final newRequest = applyHeaders(request, {'foo': 'bar'});
+/// ```
 Request applyHeaders(
   Request request,
   Map<String, String> headers, {
@@ -28,7 +37,7 @@ Request applyHeaders(
     h[k] = headers[k];
   }
 
-  return request.replace(headers: h);
+  return request.copyWith(headers: h);
 }
 
 final chopperLogger = Logger('Chopper');
@@ -41,6 +50,7 @@ Iterable<_Pair<String, String>> _mapToQuery(
   Map<String, dynamic> map, {
   String prefix,
 }) {
+  /// ignore: prefer_collection_literals
   final pairs = Set<_Pair<String, String>>();
 
   map.forEach((key, value) {
@@ -77,6 +87,7 @@ class _Pair<A, B> {
 
   _Pair(this.first, this.second);
 
+  @override
   String toString() => '$first=$second';
 }
 

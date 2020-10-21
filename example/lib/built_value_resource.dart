@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 
 part 'built_value_resource.g.dart';
-part 'built_value_resource.chopper.dart';
+part 'built_value_resource.chopper2.dart';
 
 abstract class Resource implements Built<Resource, ResourceBuilder> {
   String get id;

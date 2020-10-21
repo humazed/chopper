@@ -42,7 +42,8 @@ void main() {
     test('RequestInterceptorFunc', () async {
       final chopper = ChopperClient(
         interceptors: [
-          (Request request) => request.replace(url: '${request.url}/intercept'),
+          (Request request) =>
+              request.copyWith(url: '${request.url}/intercept'),
         ],
         services: [
           HttpTestService.create(),
@@ -64,7 +65,7 @@ void main() {
 
       await chopper.getService<HttpTestService>().getTest('1234');
 
-      expect(ResponseIntercept.intercepted is _Intercepted, isTrue);
+      expect(ResponseIntercept.intercepted, isA<_Intercepted>());
     });
 
     test('ResponseInterceptorFunc', () async {
@@ -85,7 +86,56 @@ void main() {
 
       await chopper.getService<HttpTestService>().getTest('1234');
 
-      expect(intercepted is _Intercepted, isTrue);
+      expect(intercepted, isA<_Intercepted<dynamic>>());
+    });
+
+    test('TypedResponseInterceptorFunc1', () async {
+      var intercepted;
+
+      final chopper = ChopperClient(
+        interceptors: [
+          <BodyType>(Response<BodyType> response) {
+            intercepted = _Intercepted(response.body);
+            return response;
+          },
+        ],
+        services: [
+          HttpTestService.create(),
+        ],
+        client: responseClient,
+      );
+
+      await chopper.getService<HttpTestService>().getTest('1234');
+
+      expect(intercepted, isA<_Intercepted<String>>());
+    });
+
+    test('TypedResponseInterceptorFunc2', () async {
+      final client = MockClient((http.Request req) async {
+        return http.Response('["1","2"]', 200);
+      });
+
+      var intercepted;
+
+      final chopper = ChopperClient(
+        client: client,
+        converter: JsonConverter(),
+        interceptors: [
+          <BodyType, InnerType>(Response<BodyType> response) {
+            expect(isTypeOf<String, InnerType>(), isTrue);
+            expect(isTypeOf<BodyType, List<String>>(), isTrue);
+            intercepted = _Intercepted<BodyType>(response.body);
+            return response;
+          },
+        ],
+        services: [
+          HttpTestService.create(),
+        ],
+      );
+
+      await chopper.getService<HttpTestService>().listString();
+
+      expect(intercepted, isA<_Intercepted<List<String>>>());
     });
 
     test('headers', () async {
@@ -193,11 +243,11 @@ class ResponseIntercept implements ResponseInterceptor {
 class RequestIntercept implements RequestInterceptor {
   @override
   FutureOr<Request> onRequest(Request request) =>
-      request.replace(url: '${request.url}/intercept');
+      request.copyWith(url: '${request.url}/intercept');
 }
 
-class _Intercepted {
-  final dynamic body;
+class _Intercepted<BodyType> {
+  final BodyType body;
 
   _Intercepted(this.body);
 }

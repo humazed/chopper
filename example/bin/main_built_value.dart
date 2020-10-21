@@ -1,8 +1,8 @@
 import 'package:built_collection/built_collection.dart';
-import 'package:chopper/chopper.dart';
+import 'package:chopper2/chopper2.dart';
+import 'package:built_value/standard_json_plugin.dart';
 import 'package:chopper_example/built_value_resource.dart';
 import 'package:chopper_example/built_value_serializers.dart';
-import 'package:built_value/standard_json_plugin.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
@@ -81,12 +81,12 @@ class BuiltValueConverter extends JsonConverter {
     // use [JsonConverter] to decode json
     final jsonRes = super.convertResponse(response);
     final body = _decode<Item>(jsonRes.body);
-    return jsonRes.replace<ResultType>(body: body);
+    return jsonRes.copyWith<ResultType>(body: body);
   }
 
   @override
   Request convertRequest(Request request) => super.convertRequest(
-        request.replace(
+        request.copyWith(
           body: serializers.serialize(request.body),
         ),
       );

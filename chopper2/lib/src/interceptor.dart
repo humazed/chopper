@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import "package:meta/meta.dart";
+import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 import 'request.dart';
@@ -8,21 +8,54 @@ import 'response.dart';
 import 'utils.dart';
 import 'constants.dart';
 
-/// [ResponseInterceptor] are call after [Converter.convertResponse]
+/// Interface to implements a response interceptor.
+/// Not recommended to modify body inside interceptor, see [Converter] to decode body response.
+///
+/// [ResponseInterceptor] are call after [Converter.convertResponse].
+///
+/// See builtin interceptor [HttpLoggingInterceptor]
+///
+/// ```dart
+/// class MyResponseInterceptor  implements ResponseInterceptor {
+///   String _token;
+///
+///   @override
+///   FutureOr<Response> onResponse(Response response) {
+///     _token ??= response.headers['auth_token'];
+///     return response;
+///   }
+/// }
+/// ```
 @immutable
 abstract class ResponseInterceptor {
   FutureOr<Response> onResponse(Response response);
 }
 
+/// Interface to implements a request interceptor.
+/// Not recommended to modify body inside interceptor, see [Converter] to encode body request.
+///
 /// [RequestInterceptor] are call after [Converter.convertRequest]
+///
+/// See builtin interceptor [CurlInterceptor], [HttpLoggingInterceptor]
+///
+/// ```dart
+/// class MyRequestInterceptor implements ResponseInterceptor {
+///   @override
+///   FutureOr<Request> onRequest(Request request) {
+///     return applyHeader(request, 'auth_token', 'Bearer $token');
+///   }
+/// }
+/// ```
 @immutable
 abstract class RequestInterceptor {
   FutureOr<Request> onRequest(Request request);
 }
 
-/// [Converter] is is used to convert Request or Response
-/// [convertRequest] is call before [RequestInsterceptor]
-/// and [convertResponse] just after the http response
+/// [Converter] is is used to convert body of Request or Response
+/// [convertRequest] is call before [RequestInterceptor]
+/// and [convertResponse] just after the http response, before [ResponseInterceptor].
+///
+/// See [JsonConverter], [FormUrlEncodedConverter]
 @immutable
 abstract class Converter {
   FutureOr<Request> convertRequest(Request request);
@@ -34,7 +67,8 @@ abstract class Converter {
   /// [InnerType] will be the type of the generic
   /// ex: `convertResponse<List<CustomObject>, CustomObject>(response)`
   FutureOr<Response<BodyType>> convertResponse<BodyType, InnerType>(
-      Response response);
+    Response response,
+  );
 }
 
 abstract class ErrorConverter {
@@ -48,18 +82,29 @@ class HeadersInterceptor implements RequestInterceptor {
 
   const HeadersInterceptor(this.headers);
 
+  @override
   Future<Request> onRequest(Request request) async =>
       applyHeaders(request, headers);
 }
 
-typedef FutureOr<Response> ResponseInterceptorFunc<Value>(
-    Response<Value> response);
-typedef FutureOr<Request> RequestInterceptorFunc(Request request);
+typedef ResponseInterceptorFunc1 = FutureOr<Response<BodyType>>
+    Function<BodyType>(
+  Response<BodyType> response,
+);
+typedef ResponseInterceptorFunc2 = FutureOr<Response<BodyType>>
+    Function<BodyType, InnerType>(
+  Response<BodyType> response,
+);
+typedef DynamicResponseInterceptorFunc = FutureOr<Response> Function(
+  Response response,
+);
+typedef RequestInterceptorFunc = FutureOr<Request> Function(Request request);
 
 /// Interceptor that print a curl request
 /// thanks @edwardaux
 @immutable
 class CurlInterceptor implements RequestInterceptor {
+  @override
   Future<Request> onRequest(Request request) async {
     final baseRequest = await request.toBaseRequest();
     final method = baseRequest.method;
@@ -128,13 +173,15 @@ class HttpLoggingInterceptor
   }
 }
 
-/// [json.encode] on [Request] and [json.decode] on [Request]
+/// [json.encode] on [Request] and [json.decode] on [Response]
 /// Also add `application/json` header to each request
 ///
 /// If content type header overrided using @Post(headers: {'content-type': '...'})
 /// The converter won't add json header and won't apply json.encode if content type is not JSON
 @immutable
 class JsonConverter implements Converter, ErrorConverter {
+  const JsonConverter();
+
   @override
   Request convertRequest(Request request) {
     final req = applyHeader(
@@ -150,12 +197,12 @@ class JsonConverter implements Converter, ErrorConverter {
   Request encodeJson(Request request) {
     var contentType = request.headers[contentTypeKey];
     if (contentType != null && contentType.contains(jsonHeaders)) {
-      return request.replace(body: json.encode(request.body));
+      return request.copyWith(body: json.encode(request.body));
     }
     return request;
   }
 
-  Response decodeJson(Response response) {
+  Response decodeJson<BodyType, InnerType>(Response response) {
     var contentType = response.headers[contentTypeKey];
     var body = response.body;
     if (contentType != null && contentType.contains(jsonHeaders)) {
@@ -168,14 +215,21 @@ class JsonConverter implements Converter, ErrorConverter {
       // end up with our JSON string containing incorrectly decoded characters.
       body = utf8.decode(response.bodyBytes);
     }
-    return response.replace(
-      body: _tryDecodeJson(body),
-    );
+
+    body = _tryDecodeJson(body);
+    if (isTypeOf<BodyType, Iterable<InnerType>>()) {
+      body = body.cast<InnerType>();
+    } else if (isTypeOf<BodyType, Map<String, InnerType>>()) {
+      body = body.cast<String, InnerType>();
+    }
+
+    return response.copyWith<BodyType>(body: body);
   }
 
   @override
-  Response<BodyType> convertResponse<BodyType, InnerType>(Response response) =>
-      decodeJson(response) as Response<BodyType>;
+  Response<BodyType> convertResponse<BodyType, InnerType>(Response response) {
+    return decodeJson<BodyType, InnerType>(response);
+  }
 
   dynamic _tryDecodeJson(String data) {
     try {
@@ -189,17 +243,47 @@ class JsonConverter implements Converter, ErrorConverter {
   @override
   Response convertError<BodyType, InnerType>(Response response) =>
       decodeJson(response);
+
+  static Response<BodyType> responseFactory<BodyType, InnerType>(
+    Response response,
+  ) {
+    return const JsonConverter().convertResponse<BodyType, InnerType>(response);
+  }
+
+  static Request requestFactory(Request request) {
+    return const JsonConverter().convertRequest(request);
+  }
 }
 
 @immutable
 class FormUrlEncodedConverter implements Converter, ErrorConverter {
+  const FormUrlEncodedConverter();
+
   @override
-  Request convertRequest(Request request) => applyHeader(
-        request,
-        contentTypeKey,
-        formEncodedHeaders,
-        override: false,
-      );
+  Request convertRequest(Request request) {
+    var req = applyHeader(
+      request,
+      contentTypeKey,
+      formEncodedHeaders,
+      override: false,
+    );
+
+    if (req.body is Map<String, String>) return req;
+
+    if (req.body is Map) {
+      final body = <String, String>{};
+
+      req.body.forEach((key, val) {
+        if (val != null) {
+          body[key.toString()] = val.toString();
+        }
+      });
+
+      req = req.copyWith(body: body);
+    }
+
+    return req;
+  }
 
   @override
   Response<BodyType> convertResponse<BodyType, InnerType>(Response response) =>
@@ -208,4 +292,8 @@ class FormUrlEncodedConverter implements Converter, ErrorConverter {
   @override
   FutureOr<Response> convertError<BodyType, InnerType>(Response response) =>
       response;
+
+  static Request requestFactory(Request request) {
+    return const FormUrlEncodedConverter().convertRequest(request);
+  }
 }

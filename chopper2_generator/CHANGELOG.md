@@ -1,18 +1,29 @@
 # Changelog
 
+## 3.0.5
+
+- Packages upgrade
+
 ## 3.0.4
-* Maintenance release to match the version with generator 
+
+* Maintenance release to match the version with generator
+- Analyzer update
 
 ## 3.0.3
-* Fix a bug in generator not running 
+
+* Fix a bug in generator not running
+- Documentations update
+- Generate code compatible with pedantic analysis option
 
 ## 3.0.2
 
-* Maintenance release to match the version with chopper2 
+* Maintenance release to match the version with chopper2
+- Fix factory converter
 
 ## 3.0.1
 
-- to change the name to chopper2_generator
+* to change the name to chopper2_generator
+- Fix Avoid using braces in interpolation when not needed
 
 ## 3.0.0
 

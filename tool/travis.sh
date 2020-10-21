@@ -1,6 +1,8 @@
 #!/bin/bash
 # Created with https://github.com/dart-lang/mono_repo
 
+set -e
+
 if [ -z "$PKG" ]; then
   echo -e '\033[31mPKG environment variable must be set!\033[0m'
   exit 1
@@ -11,38 +13,44 @@ if [ "$#" == "0" ]; then
   exit 1
 fi
 
-pushd $PKG
-pub upgrade || exit $?
+echo -e "\033[1mPKG: ${PKG}\033[22m"
+pushd "${PKG}"
+dart pub get
 
-EXIT_CODE=0
-
+## TODO use builtin coverage report from package:test
 function pkg_coverage {
   if [ "$CODECOV_TOKEN" ] ; then
-    pub run test_coverage
+    dart pub run test_coverage
     bash <(curl -s https://codecov.io/bash)
   fi
 }
 
 function run_analyze {
   echo -e '\033[1mTASK: dartanalyzer\033[22m'
-  dartfmt -n --set-exit-if-changed .
+  dart analyze --fatal-warnings --fatal-infos .
 }
 
 function run_format {
   echo -e '\033[1mTASK: format\033[22m'
-  dartfmt -n --set-exit-if-changed .
+  dart format -o none --set-exit-if-changed .
+}
+
+function run_build {
+  echo -e '\033[1mTASK: build\033[22m'
+  dart pub run build_runner build --delete-conflicting-outputs
 }
 
 function run_test {
   echo -e '\033[1mTASK: test\033[22m'
-  pub run build_runner build --delete-conflicting-outputs
-  pub run test -p chrome -p vm --reporter expanded 
+  dart pub run test -p chrome -p vm --reporter expanded
   pkg_coverage    
 }
 
-while (( "$#" )); do
-  TASK=$1
+for TASK in "$@"; do
   case $TASK in
+  build) echo
+    run_build
+    ;;
   test) echo
     run_test
     ;;
@@ -53,11 +61,8 @@ while (( "$#" )); do
     run_format
     ;;
   *) echo -e "\033[31mNot expecting TASK '${TASK}'. Error!\033[0m"
-    EXIT_CODE=1
+    exit 1
     ;;
   esac
 
-  shift
 done
-
-exit $EXIT_CODE

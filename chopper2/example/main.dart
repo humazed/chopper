@@ -1,10 +1,10 @@
-import 'package:chopper2/chopper.dart';
+import 'package:chopper2/chopper2.dart';
 import 'package:chopper2/src/interceptor.dart';
 import 'definition.dart';
 
-main() async {
+Future<void> main() async {
   final chopper = ChopperClient(
-    baseUrl: "http://localhost:8000",
+    baseUrl: 'http://localhost:8000',
     services: [
       // the generated service
       MyService.create()
@@ -14,7 +14,7 @@ main() async {
 
   final myService = chopper.getService<MyService>();
 
-  final response = await myService.getMapResource("1");
+  final response = await myService.getMapResource('1');
   print(response.body);
 
   final list = await myService.getListResources();
