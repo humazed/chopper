@@ -449,7 +449,7 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
       map[literal(name)] = refer(p.displayName);
     });
 
-    print('fromUrlEncoded = $fromUrlEncoded');
+    // because chopper expect fromUrlEncoded to be Map<String, String> and will crash otherwise
     return literalMap(
       map,
       refer('String'),
