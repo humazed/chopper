@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.6
+
+- generate correct code for application/x-www-form-urlencoded
+
 ## 3.0.5
 
 - Packages upgrade

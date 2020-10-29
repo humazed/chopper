@@ -172,7 +172,8 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
       ];
 
       if (queries.isNotEmpty) {
-        blocks.add(_generateMap(queries).assignFinal(_parametersVar).statement);
+        blocks.add(
+            _generateMap(queries, false).assignFinal(_parametersVar).statement);
       }
 
       final hasQueryMap = queryMap.isNotEmpty;
@@ -204,8 +205,14 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
             refer(body.keys.first).assignFinal(_bodyVar).statement,
           );
         } else {
+          final formEncoded = method
+              .peek('headers')
+              .mapValue
+              .toString()
+              .contains(chopper2.formEncodedHeaders);
+
           blocks.add(
-            _generateMap(fields).assignFinal(_bodyVar).statement,
+            _generateMap(fields, formEncoded).assignFinal(_bodyVar).statement,
           );
 
           blocks.add(
@@ -434,14 +441,20 @@ class ChopperGenerator extends GeneratorForAnnotation<chopper2.ChopperApi> {
     return refer('Request').newInstance(params, namedParams);
   }
 
-  Expression _generateMap(Map<ParameterElement, ConstantReader> queries) {
+  Expression _generateMap(
+      Map<ParameterElement, ConstantReader> queries, bool fromUrlEncoded) {
     final map = {};
     queries.forEach((p, ConstantReader r) {
       final name = r.peek('name')?.stringValue ?? p.displayName;
       map[literal(name)] = refer(p.displayName);
     });
 
-    return literalMap(map, refer('String'), refer('dynamic'));
+    print('fromUrlEncoded = $fromUrlEncoded');
+    return literalMap(
+      map,
+      refer('String'),
+      refer(fromUrlEncoded ? 'String' : 'dynamic'),
+    );
   }
 
   Expression _generateList(

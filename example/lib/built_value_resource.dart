@@ -8,15 +8,18 @@ import 'package:built_value/serializer.dart';
 import 'package:chopper2/chopper2.dart';
 
 part 'built_value_resource.g.dart';
+
 part 'built_value_resource.chopper2.dart';
 
 abstract class Resource implements Built<Resource, ResourceBuilder> {
   String get id;
+
   String get name;
 
   static Serializer<Resource> get serializer => _$resourceSerializer;
 
   factory Resource([updates(ResourceBuilder b)]) = _$Resource;
+
   Resource._();
 }
 

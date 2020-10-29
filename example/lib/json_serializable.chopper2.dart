@@ -111,4 +111,16 @@ class _$MyService extends MyService {
         Request('POST', $url, client.baseUrl, parts: $parts, multipart: true);
     return client.send<dynamic, dynamic>($request);
   }
+
+  @override
+  Future<Response<dynamic>> postResourceUrlEncoded(String toto, String b) {
+    final $url = '/resources/';
+    final $headers = {'content-type': 'application/x-www-form-urlencoded'};
+    final $body = <String, String>{'a': toto, 'b': b};
+    $body.removeWhere((key, value) => value == null);
+    final $request =
+        Request('POST', $url, client.baseUrl, body: $body, headers: $headers);
+    return client.send<dynamic, dynamic>($request,
+        requestConverter: convertForm);
+  }
 }

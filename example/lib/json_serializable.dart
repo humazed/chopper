@@ -4,6 +4,7 @@ import 'package:chopper2/chopper2.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'json_serializable.g.dart';
+
 part 'json_serializable.chopper2.dart';
 
 @JsonSerializable()
@@ -29,6 +30,9 @@ class ResourceError {
 
   Map<String, dynamic> toJson() => _$ResourceErrorToJson(this);
 }
+
+Request convertForm(Request req) =>
+    applyHeader(req, contentTypeKey, formEncodedHeaders);
 
 @ChopperApi(baseUrl: "/resources")
 abstract class MyService extends ChopperService {
@@ -81,4 +85,14 @@ abstract class MyService extends ChopperService {
     @Part('opStr') String opStr,
     @PartFile('opBytes') List<int> opBytes,
   });
+
+  @Post(
+    path: '/',
+    headers: {contentTypeKey: formEncodedHeaders},
+  )
+  @FactoryConverter(request: convertForm)
+  Future<Response> postResourceUrlEncoded(
+    @Field('a') String toto,
+    @Field() String b,
+  );
 }
