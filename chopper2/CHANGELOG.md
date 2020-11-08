@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.7
+* Removed "Interceptors should not transform the body of the response" assertion.
+
 ## 3.0.4
 * Fix a bug with multipart list
 
